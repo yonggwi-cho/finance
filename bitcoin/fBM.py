@@ -11,3 +11,5 @@ class fBM:
     def B(self,H,t):
         # H is Hurst exponent
         # t is a time point
+        # estimate integral by Montecarlo??
+        # B^(H)(t) =
