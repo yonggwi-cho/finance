@@ -6,7 +6,7 @@ import os
 import commands as cm
 
 # sampling num
-Nsample = 1000
+Nsample = 100
 
 # initial values
 mu = 0.5
@@ -20,7 +20,7 @@ sgm_list = list()
 
 # gaussian sampler for mu
 for i in range(Nsample):
-    mup = np.random.normal(mu)
+    mup = np.random.normal(mu,mu/10.0)
     output=cm.getoutput("python train_BSM_BTC.py -m "+str(mup)+" -s "+str(sgm)).split("\n")
     loss = output[0].split(" ")[1]
     var = output[1].split(" ")[1]
@@ -28,7 +28,7 @@ for i in range(Nsample):
 
 # gaussian sampler for sgm
 for i in range(Nsample):
-    sgmp = np.random.normal(sgm)
+    sgmp = np.random.normal(sgm,sgm/10.0)
     output=cm.getoutput("python train_BSM_BTC.py -m "+str(mu)+" -s "+str(sgmp)).split("\n")
     loss = output[0].split(" ")[1]
     var = output[1].split(" ")[1]
@@ -36,8 +36,8 @@ for i in range(Nsample):
 
 # gaussian sampler for mu and sgm
 for i in range(Nsample):
-    mup = np.random.normal(mu)
-    sgmp = np.random.normal(sgm)
+    mup = np.random.normal(mu,mu/10.0)
+    sgmp = np.random.normal(sgm,sgm/10.0)
     output=cm.getoutput("python train_BSM_BTC.py -m "+str(mup)+" -s "+str(sgmp)).split("\n")
     loss = output[0].split(" ")[1]
     var = output[1].split(" ")[1]
