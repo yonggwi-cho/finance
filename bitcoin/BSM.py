@@ -37,7 +37,7 @@ class BSM():
             # BSM model
             self.y[it] = self.y[0]*math.exp((self.mu-0.5*self.sgm**2)*self.t[it]+self.sgm*self.w[it])
             self.t[it] = self.t[it-1] + self.dt
-        return self.t, self.y
+        return self.y
 
     def predict_fixrandom(self):
         self.set_randomseed()
