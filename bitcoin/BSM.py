@@ -4,7 +4,7 @@ import math
 
 class BSM():
 
-    def __init__(self,N,mu,sgm,t_init,y_init):
+    def __init__(self,N,mu,sgm,t_init,y_init,seed=0):
         self.N = N
         self.mu = mu
         self.sgm = sgm
@@ -14,8 +14,26 @@ class BSM():
         self.y = np.zeros(self.N,dtype=float)
         self.t[0] = float(t_init)
         self.y[0] = float(y_init)
+        self.seed = seed
+
+    def set_randomseed(self):
+        np.random.seed(seed=self.seed);
 
     def predict(self):
+        # predict by BSM model
+        for it in range(self.N):
+            # make standard browninaMotion
+            if it == 0:
+                self.w[it] = 0.0
+            else :
+                self.w[it] = self.w[it-1] + np.random.normal()
+            # BSM model
+            self.y[it] = self.y[0]*math.exp((self.mu-0.5*self.sgm**2)*self.t[it]+self.sgm*self.w[it])
+            self.t[it] = self.t[it-1] + self.dt
+        return self.t, self.y
+
+    def predict_fixrandom(self):
+        self.set_randomseed()
         # predict by BSM model
         for it in range(self.N):
             # make standard browninaMotion
