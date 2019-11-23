@@ -3,6 +3,8 @@ import csv
 import BSM as bsm
 import numpy as np
 import matplotlib.pyplot as plt
+import math
+
 class Optimizer():
 
     def __init__(self,N,csvfile):
@@ -18,8 +20,8 @@ class Optimizer():
         with open(self.csvfile,"r") as file:
             reader = csv.reader(file)
             header = next(reader)
-            print("read csv file...")
-            print(header)
+            #print("read csv file...")
+            #print(header)
             for row in reader:
                 self.timestamp.append(row[0])
                 self.z.append(row[4]) # use market's close value
@@ -43,3 +45,31 @@ class Optimizer():
         y = model.predict()
         loss = model.calc_loss(np.array(self.z,dtype=float))
         return loss, y
+
+    def estimate_Nsample(self,args):
+        loss         = 0.0
+        loss_squared = 0.0
+        for i in range(self.Nsample):
+            tmp, y = self.estimate(args)
+            loss += tmp
+            loss_squared += tmp**2
+
+        average_loss = loss/self.Nsample
+        average_loss_squread = loss_squared/self.Nsample
+        variance =  average_loss_squread - average_loss
+
+        return average_loss, math.sqrt(variance)
+
+    def estimate_Nsample_wplot(self,args):
+        loss         = 0.0
+        loss_squared = 0.0
+        for i in range(self.Nsample):
+            tmp, y = self.estimate(args)
+            loss += tmp
+            loss_squared += tmp**2
+
+        average_loss = loss/self.Nsample
+        average_loss_squread = loss_squared/self.Nsample
+        variance =  average_loss_squread - average_loss
+
+        return average_loss, math.sqrt(variance)
