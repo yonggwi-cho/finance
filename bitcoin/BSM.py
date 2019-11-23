@@ -4,7 +4,7 @@ import math
 
 class BSM():
 
-    def __init__(self,N,mu,sgm,t_init,y_init,seed=0):
+    def __init__(self,N,mu,sgm,t_init,y_init,seed):
         self.N = N
         self.mu = mu
         self.sgm = sgm
@@ -18,6 +18,13 @@ class BSM():
 
     def set_randomseed(self):
         np.random.seed(seed=self.seed);
+
+    def calc_loss(self,z):
+        # squared summation
+        loss = 0.0
+        for i in range(self.N):
+            loss += (z[i]-self.y[i])**2
+        return math.sqrt(loss)
 
     def predict(self):
         # predict by BSM model

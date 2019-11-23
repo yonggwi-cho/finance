@@ -34,10 +34,12 @@ y_init = z[t_init]
 
 # BSM model
 model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,args.seed)
-t, y = model.predict_fixrandom()
+#t, y = model.predict_fixrandom()
+t, y = model.predict()
 
 # calc loss function
-
+loss = model.calc_loss(np.array(z,dtype=float))
+print loss
 
 # plot BSM model
 plt.plot(t,y,"ro-")
