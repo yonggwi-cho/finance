@@ -17,36 +17,39 @@ parser.add_argument("-seed","--seed",type=int,default=1)
 parser.add_argument("-c","--csvfile",type=str,default="./BTCJPY_train.csv")
 args = parser.parse_args()
 
-timestamp=list()
-z=list()
+def plot_fig(t,y,z):
+    # plot BSM model
+    plt.plot(t,y,"ro-")
+    plt.yscale("log")
 
-# read csv file
-with open(args.csvfile,"r") as file:
-    reader = csv.reader(file)
-    header = next(reader)
-    for row in reader:
-        timestamp.append(row[0])
-        z.append(row[4])
+    # plot BTC data
+    plt.plot(t,z,"bs:")
+    plt.yscale("log")
+    plt.show()
 
-N = len(z) # use close market's value
-t_init = 0
-y_init = z[t_init]
+if __name__ == "__main__" :
+    timestamp=list()
+    z=list()
 
-# BSM model
-model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,args.seed)
-#t, y = model.predict_fixrandom()
-t, y = model.predict()
+    # read csv file
+    with open(args.csvfile,"r") as file:
+        reader = csv.reader(file)
+        header = next(reader)
+        for row in reader:
+            timestamp.append(row[0])
+            z.append(row[4])
 
-# calc loss function
-loss = model.calc_loss(np.array(z,dtype=float))
-print loss
+    N = len(z) # use close market's value
+    t_init = 0
+    y_init = z[t_init]
 
-# plot BSM model
-plt.plot(t,y,"ro-")
-plt.yscale("log")
+    # BSM model
+    model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,args.seed)
+    #t, y = model.predict_fixrandom()
+    t, y = model.predict()
 
-# plot BTC data
-x=range(N)
-plt.plot(x,z,"bs:")
-plt.yscale("log")
-plt.show()
+    # calc loss function
+    loss = model.calc_loss(np.array(z,dtype=float))
+    print("***\nloss="+str(loss)+"\n***")
+
+    plot_fig(t,y,z)
