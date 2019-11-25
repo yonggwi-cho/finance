@@ -22,16 +22,23 @@ with open(args.file,"r") as file:
     header = next(reader)
     for row in reader:
         #x.append(row[0])
-        y1.append(row[1])
-        y2.append(row[2])
-        y3.append(row[3])
-        y4.append(row[4])
+        y1.append(float(row[1]))
+        y2.append(float(row[2]))
+        y3.append(float(row[3]))
+        y4.append(float(row[4]))
 
 # plot
 x=range(len(y1))
-#plt.plot(x,y1,"ro-")
+#plt.plot(x,y1,"mo:")
 #plt.plot(x,y2,"bs--")
 #plt.plot(x,y3,"g^:")
-plt.plot(x,y4,"mo--")
+plt.plot(x,y4,"ro-")
 plt.yscale("log")
+
+# save plot data
+with open("plot_BTC.data","w") as file:
+    file.write("#time,close\n")
+    for i in range(len(x)):
+        file.write(str(x[i])+"\t"+str(y4[i])+"\n")
+        
 plt.show()
