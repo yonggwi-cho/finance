@@ -14,6 +14,7 @@ class Optimizer():
         self.z = list()
         self.t = list()
         self.read_csv()
+        self.seed = -1 # seed must be not setted.
 
     def read_csv(self):
         # read csv file
@@ -33,6 +34,19 @@ class Optimizer():
         plt.yscale("log")
         plt.show()
 
+    def estimate_last(self,args):
+        # initialize
+        N = len(self.z) # use close market's value
+        t_init = 0
+        y_init = self.z[t_init]
+
+        # BSM model
+        model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,self.seed)
+        y = model.predict()
+        #print(float(y[-1]),float(self.z[-1]),(float(y[-1])-float(self.z[-1])))
+        error = (float(y[-1]) - float(self.z[-1]))**2
+        return error
+
     def estimate(self,args):
         # initialize
         N = len(self.z) # use close market's value
@@ -40,8 +54,7 @@ class Optimizer():
         y_init = self.z[t_init]
 
         # BSM model
-        model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,args.seed)
-        #t, y = model.predict_fixrandom()
+        model = bsm.BSM(N,args.mu,args.sigma,t_init,y_init,self.seed)
         y = model.predict()
         loss = model.calc_loss(np.array(self.z,dtype=float))
         return loss, y
@@ -59,6 +72,22 @@ class Optimizer():
         variance =  average_loss_squread - average_loss
 
         return average_loss, math.sqrt(variance)
+
+    def estimate_model(self,args):
+        # calc error of last value
+        last         = 0.0
+        last_squared = 0.0
+        for i in range(self.Nsample):
+            tmp = self.estimate_last(args)
+            last += tmp
+            last_squared += tmp**2
+            #print(tmp)
+
+        average_last = last/self.Nsample
+        average_last_squread = last_squared/self.Nsample
+        variance =  average_last_squread - average_last
+
+        return math.sqrt(average_last), math.sqrt(variance)
 
     def estimate_Nsample_wplot(self,args):
         loss         = 0.0
