@@ -5,7 +5,7 @@ import argparse as ae
 import seaborn as sns
 sns.set_style("darkgrid")
 from mpl_toolkits.mplot3d import Axes3D
-
+import numpy as np
 #parser = ae.ArgumentParser()
 
 file = open("data.txt","r")
@@ -30,7 +30,13 @@ ax = Axes3D(fig)
 ax.set_xlabel("mu")
 ax.set_ylabel("sigma")
 ax.set_zlabel("loss")
-ax.set_zlim(zmax=1.0e+7)
+#ax.set_zscale("log")
+#ax.set_zlim(zmax=1.0e+8)
+
+# search min
+loss = np.array(loss)
+imin = loss.argmin()
+print("loss=",loss.min()," mu=",mu[imin]," sgm=",sgm[imin])
 
 ax.plot(mu,sgm,loss,marker="o",linestyle='None')
 plt.show()
