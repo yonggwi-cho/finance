@@ -32,13 +32,15 @@ x=range(len(y1))
 #plt.plot(x,y1,"mo:")
 #plt.plot(x,y2,"bs--")
 #plt.plot(x,y3,"g^:")
-plt.plot(x,y4,"ro-")
+plt.plot(x,y4,"ro-",markeredgecolor="black")
 plt.yscale("log")
+plt.xlabel("time",fontsize=20)
+plt.ylabel("BTC",fontsize=20)
 
 # save plot data
 with open("plot_BTC.data","w") as file:
     file.write("#time,close\n")
     for i in range(len(x)):
         file.write(str(x[i])+"\t"+str(y4[i])+"\n")
-        
+
 plt.show()

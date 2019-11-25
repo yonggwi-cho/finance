@@ -4,7 +4,7 @@ import math
 
 class BSM():
 
-    def __init__(self,N,mu,sgm,t_init,y_init,seed):
+    def __init__(self,N,mu,sgm,t_init=0.0,y_init=0.0,seed=-1):
         self.N = N
         self.mu = mu
         self.sgm = sgm
@@ -15,6 +15,13 @@ class BSM():
         self.t[0] = float(t_init)
         self.y[0] = float(y_init)
         self.seed = seed
+
+    def clean(self):
+        self.t = np.zeros(self.N,dtype=float)
+        self.w = np.zeros(self.N,dtype=float) # stanrd standard browninaMotion
+        self.y = np.zeros(self.N,dtype=float)
+        #self.t[0] = float(t_init)
+        #self.y[0] = float(y_init)
 
     def set_randomseed(self):
         np.random.seed(seed=self.seed);
@@ -27,6 +34,8 @@ class BSM():
         return math.sqrt(loss)
 
     def predict(self):
+        if self.seed != -1 :
+            self.set_randomseed()
         # predict by BSM model
         for it in range(self.N):
             # make standard browninaMotion
