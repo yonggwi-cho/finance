@@ -27,7 +27,7 @@ class BSM():
         np.random.seed(seed=self.seed);
 
     def calc_loss(self,z):
-        # squared summation
+        # calc RMS error
         loss = 0.0
         for i in range(self.N):
             loss += (z[i]-self.y[i])**2

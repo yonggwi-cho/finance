@@ -20,8 +20,15 @@ if __name__ == "__main__" :
     parser.add_argument("-c","--csvfile",type=str,default="./BTCJPY_train.csv")
     args = parser.parse_args()
 
+    # make dictionary
+    dict = {}
+    dict["mu"] = args.mu
+    dict["sgm"] = args.sigma
+
     # calc loss for BSM model and BTC data
     optimizer = opt.Optimizer(args.Nsample,args.csvfile)
-    ave, var = optimizer.estimate_Nsample(args)
+    optimizer.add_param(dist[0])
+    optimizer.add_param(dist[1])
+    ave, var = optimizer.estimate_Nsample()
     print("averaged_loss= "+str(ave))
     print("variance= "+str(var))
