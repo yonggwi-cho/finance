@@ -8,7 +8,8 @@ import math
 class Optimizer():
 
     def __init__(self,N,csvfile,file="./sampling_log"):
-        self.Nsample = N
+        self.Nestimate = N
+        self.Nsample = 10
         self.csvfile = csvfile
         self.timestamp = list()
         self.z = list()
@@ -20,8 +21,7 @@ class Optimizer():
         self.output = file
 
     def add_param(self,param):
-        key, val = param.split(":") # param must be dictionary
-        self.init_params[key] = val
+        self.init_params = param
 
     def read_csv(self):
         # read csv file
@@ -61,7 +61,7 @@ class Optimizer():
         y_init = self.z[t_init]
 
         # BSM model
-        model = bsm.BSM(N,self.params["mu"],self.params["sigma"],t_init,y_init,self.seed)
+        model = bsm.BSM(N,self.params["mu"],self.params["sgm"],t_init,y_init,self.seed)
         y = model.predict()
         loss = model.calc_loss(np.array(self.z,dtype=float))
         return loss, y
@@ -69,13 +69,13 @@ class Optimizer():
     def estimate_Nsample(self):
         loss         = 0.0
         loss_squared = 0.0
-        for i in range(self.Nsample):
+        for i in range(self.Nestimate):
             tmp, y = self.estimate()
             loss += tmp
             loss_squared += tmp**2
 
-        average_loss = loss/self.Nsample
-        average_loss_squread = loss_squared/self.Nsample
+        average_loss = loss/self.Nestimate
+        average_loss_squread = loss_squared/self.Nestimate
         variance =  average_loss_squread - average_loss
 
         return average_loss, math.sqrt(variance)
@@ -84,54 +84,40 @@ class Optimizer():
         # calc error of last value
         last         = 0.0
         last_squared = 0.0
-        for i in range(self.Nsample):
+        for i in range(self.Nestimate):
             tmp = self.estimate_last(args)
             last += tmp
             last_squared += tmp**2
             #print(tmp)
 
-        average_last = last/self.Nsample
-        average_last_squread = last_squared/self.Nsample
+        average_last = last/self.Nestimate
+        average_last_squread = last_squared/self.Nestimate
         variance =  average_last_squread - average_last
 
         return math.sqrt(average_last), math.sqrt(variance)
 
     def sample(self):
-        file = open(self.ouput,"w")
+        file = open(self.output,"w")
         # sampler for mu
-        for i in range(1,Nsample+1):
+        for i in range(1,self.Nsample+1):
             self.params["mu"]  = i*0.1*self.init_params["mu"]
             self.params["sgm"] = self.init_params["sgm"]
             loss,var=self.estimate_Nsample()
             file.write(str(self.params["mu"])+"\t"+str(self.params["sgm"])+"\t"+str(loss)+"\t"+str(var)+"\n")
 
         # sampler for sgm
-        for i in range(1,Nsample+1):
+        for i in range(1,self.Nsample+1):
             self.params["mu"] = self.init_params["mu"]
             self.params["sgm"] = i*0.1*self.init_params["sgm"]
             loss,var=self.estimate_Nsample()
             file.write(str(self.params["mu"])+"\t"+str(self.params["sgm"])+"\t"+str(loss)+"\t"+str(var)+"\n")
 
         # sampler for mu and sgm
-        for j in range(1,Nsample+1):
-            for i in range(1,Nsample+1):
+        for j in range(1,self.Nsample+1):
+            for i in range(1,self.Nsample+1):
                 self.params["mu"]  = i*0.1*self.init_params["mu"]
                 self.params["sgm"] = i*0.1*self.init_params["sgm"]
                 loss,var=self.estimate_Nsample()
                 file.write(str(self.params["mu"])+"\t"+str(self.params["sgm"])+"\t"+str(loss)+"\t"+str(var)+"\n")
         # close file
         file.close()
-
-    def estimate_Nsample_wplot(self,args):
-        loss         = 0.0
-        loss_squared = 0.0
-        for i in range(self.Nsample):
-            tmp, y = self.estimate(args)
-            loss += tmp
-            loss_squared += tmp**2
-
-        average_loss = loss/self.Nsample
-        average_loss_squread = loss_squared/self.Nsample
-        variance =  average_loss_squread - average_loss
-
-        return average_loss, math.sqrt(variance)

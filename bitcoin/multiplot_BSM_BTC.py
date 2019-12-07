@@ -32,7 +32,7 @@ Nt = len(z)
 init = z[0]
 
 # calc BSM model
-fig = plt.figure(figsize=(20,12))
+fig = plt.figure(figsize=(16,10))
 t=range(Nt)
 for i in range(args.Nsample):
     model = bsm.BSM(Nt,args.mu,args.sigma,t_init=0.0,y_init=init)

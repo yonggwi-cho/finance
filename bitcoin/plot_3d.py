@@ -6,9 +6,12 @@ import seaborn as sns
 sns.set_style("darkgrid")
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-#parser = ae.ArgumentParser()
 
-file = open("data.txt","r")
+parser = ae.ArgumentParser()
+parser.add_argument("-d","--data",default="./sampling_log")
+args = parser.parse_args()
+
+file = open(args.data,"r")
 lines = file.readlines()
 file.close()
 

@@ -9,9 +9,10 @@ import argparse as ae
 
 # get args
 parser = ae.ArgumentParser()
-parser.add_argument("-m","--mu",required=True)
-parser.add_argument("-s","--sgm",required=True)
+parser.add_argument("-m","--mu",type=float,required=True)
+parser.add_argument("-s","--sgm",type=float,required=True)
 parser.add_argument("-Ns","--Nsample",default=10)
+parser.add_argument("-c","--csvfile",type=str,default="./BTCJPY_train.csv")
 args = parser.parse_args()
 
 # list
@@ -24,9 +25,8 @@ sgm_list = list()
 dict = {}
 dict["mu"] = args.mu
 dict["sgm"] = args.sgm
-optimizer = opt.Optimizer(args.Nsample,)
+optimizer = opt.Optimizer(args.Nsample,args.csvfile)
 
 # initial values
-optimizer.add_param(dict[0])
-optimizer.add_param(dict[1])
+optimizer.add_param(dict)
 optimizer.sample()
