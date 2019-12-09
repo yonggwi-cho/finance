@@ -8,8 +8,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 parser = ae.ArgumentParser()
+<<<<<<< HEAD
 parser.add_argument("-zmax","--zmax",type=float,default=1.0e+7)
 parser.add_argument("-d","--data",type=str,default="data.txt")
+=======
+parser.add_argument("-d","--data",default="./sampling_log")
+>>>>>>> d6778ba39c8283f0d36c2602e044e7a79d5ff635
 args = parser.parse_args()
 
 file = open(args.data,"r")
@@ -38,8 +42,18 @@ ax = Axes3D(fig)
 ax.set_xlabel("mu")
 ax.set_ylabel("sigma")
 ax.set_zlabel("loss")
+<<<<<<< HEAD
 ax.set_zlim(zmax=args.zmax)
 
+=======
+#ax.set_zscale("log")
+#ax.set_zlim(zmax=1.0e+8)
+
+# search min
+loss = np.array(loss)
+imin = loss.argmin()
+print("loss=",loss.min()," mu=",mu[imin]," sgm=",sgm[imin])
+>>>>>>> d6778ba39c8283f0d36c2602e044e7a79d5ff635
 
 ax.plot(mu,sgm,loss,marker="o",linestyle='None')
 plt.show()

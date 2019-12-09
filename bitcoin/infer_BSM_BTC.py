@@ -17,18 +17,11 @@ if __name__ == "__main__" :
     parser.add_argument("-m","--mu",type=float,default=0.4)
     parser.add_argument("-s","--sigma",type=float,default=0.1)
     parser.add_argument("-seed","--seed",type=int,default=1)
-    parser.add_argument("-c","--csvfile",type=str,default="./BTCJPY_train.csv")
+    parser.add_argument("-c","--csvfile",type=str,default="./BTCJPY_test.csv")
     args = parser.parse_args()
-
-    # make dictionary
-    dict = {}
-    dict["mu"] = args.mu
-    dict["sgm"] = args.sigma
 
     # calc loss for BSM model and BTC data
     optimizer = opt.Optimizer(args.Nsample,args.csvfile)
-    optimizer.add_param(dist[0])
-    optimizer.add_param(dist[1])
-    ave, var = optimizer.estimate_Nsample()
-    print("averaged_loss= "+str(ave))
+    ave, var = optimizer.estimate_model(args)
+    print("averaged_error= "+str(ave))
     print("variance= "+str(var))
