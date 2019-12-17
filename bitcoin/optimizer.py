@@ -89,7 +89,6 @@ class Optimizer():
             last += tmp
             last_squared += tmp**2
             #print(tmp)
-
         average_last = last/self.Nestimate
         average_last_squread = last_squared/self.Nestimate
         variance =  average_last_squread - average_last
