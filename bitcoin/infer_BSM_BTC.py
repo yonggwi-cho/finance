@@ -23,6 +23,5 @@ if __name__ == "__main__" :
     # calc loss for BSM model and BTC data
     optimizer = opt.Optimizer(args.Nsample,args.csvfile)
     ave, var = optimizer.estimate_model(args)
-    print("averaged_squared_error= "+str(ave))
-    print("RMSerror= "+str(math.sqrt(ave)))
+    print("average= "+str(ave))
     print("variance= "+str(var))
