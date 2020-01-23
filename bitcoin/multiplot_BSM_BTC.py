@@ -49,4 +49,5 @@ for i in range(args.Nsample):
     plt.yscale("log")
     del model
 fig.suptitle("(mu,sigma)=("+str(args.mu)+","+str(args.sigma)+")",fontsize=30)
+plt.savefig("BTC_BSM_mu"+str(args.mu)+"_s"+str(args.sigma)+".png")
 plt.show()
